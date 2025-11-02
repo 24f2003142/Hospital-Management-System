@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lifeline HMS | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style/style.css">
+  </head>
+  <body style="background-color:#dae9ea;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a7679;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/SignedIn/admin/Doctors">
+                <img src="../../static/logo.jpg" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/SignedIn/admin/Doctors">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/SignedIn/admin/Departments">Departments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SignedIn/admin/patients">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SignedIn/admin/Appointments">Appointments</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div>
+      <h1 style="text-align: center; color: #1a7679;">New Department</h1>
+      <p>Use Below Form to create new Department</p>
+        <form id="Department_registeration_form" class="row g-3" action="/SignedIn/admin/Departments/add" method="POST">
+            <div class="col col-md-6">
+                <label for="Departmentidlabel" class="form-label">Department Id</label>
+                <input type="number" class="form-control" id="department_id"  name="department_id">
+            </div>
+            <div class="col col-md-6">
+                <label for="Departmentnamelabel" class="form-label">Department Name</label>
+                <input type="text" class="form-control" id="department_name" name="department_name">
+            </div>
+            <div class="col col-md-12">
+                <label for="Departmentoverviewlabel" class="form-label">Department Overview</label>
+                <input type="text" class="form-control" id="department_overview" name="department_overview">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </div>
+    {% if message %}
+      <div class="alert alert-warning" style="color: red;">
+        {{ message }}
+      </div>
+    {% endif %}
+    <div>
+      <h1 style="text-align: center; color: #1a7679;">Departments Table</h1>
+      <p> This is the Departments page of admin the below shows the list of currently added Departments in the hospital</p>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Department Overview</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Department in allDepartments %}
+            <tr>
+              <th scope="row">{{Department[0]}}</th>
+              <td>{{ Department[1]}}</td>
+              <td>{{Department[2]}}</td>
+              <td>
+                <button type="button" class="btn btn-outline-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editModal"
+                    data-id="{{ Department[0] }}"
+                    data-name="{{ Department[1]|e }}"
+                    data-overview="{{ Department[2]|e }}">
+                    Edit
+                </button>
+                <a class="btn btn-outline-danger" href="{{ url_for('departments_delete', dept_name=Department[1]) }}" >
+                  Delete
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <form id="modalEditForm" action="{{ url_for('departments_update') }}" method="POST">
+                <div class="modal-header">
+                <h5 class="modal-title">Edit Department</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <input type="hidden" name="department_id" id="modal_department_id">
+                <div class="mb-3">
+                    <label class="form-label">Department Name</label>
+                    <input class="form-control" name="department_name" id="modal_department_name">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Department Overview</label>
+                    <input class="form-control" name="department_overview" id="modal_department_overview">
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const id = button.getAttribute('data-id');
+        const name = button.getAttribute('data-name');
+        const overview = button.getAttribute('data-overview');
+
+        document.getElementById('modal_department_id').value = id;
+        document.getElementById('modal_department_name').value = name;
+        document.getElementById('modal_department_overview').value = overview;
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>

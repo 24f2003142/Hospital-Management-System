@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lifeline HMS | Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style/style.css">
+  </head>
+  <body style="background-color:#dae9ea;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a7679;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/SignedIn/admin/Doctors">
+                <img src="../../static/logo.jpg" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/SignedIn/admin/Doctors">Doctors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SignedIn/admin/Departments">Departments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SignedIn/admin/patients">Patients</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/SignedIn/admin/Appointments">Appointments</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div>
+      <h1 style="text-align: center; color: #1a7679;">Doctors Table</h1>
+      <p> This is the Doctors page of admin the below shows the list of currently added doctors which are working in the hospital</p>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">User Id</th>
+            <th scope="col">Department_id</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Doctor in allDoctors %}
+            <tr>
+              <th scope="row">{{Doctor[0]}}</th>
+              <td>{{Doctor[1]}} {{Doctor[2]}} {{Doctor[3]}}</td>
+              <td>{{Doctor[4]}}</td>
+              <td>{{Doctor[5]}}</td>
+              <td>
+                <button type="button" class="btn btn-outline-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editModal"
+                    data-id="{{ Doctor[0] }}"
+                    data-u-id="{{ Doctor[4] }}"
+                    data-fname="{{ Doctor[1]|e }}"
+                    data-mname="{{ Doctor[2]|e }}"
+                    data-lname="{{ Doctor[3]|e }}"
+                    data-deptid="{{ Doctor[5]|e }}"
+                    data-mobile="{{ Doctor[6]|e }}"
+                    data-specialization="{{ Doctor[7]|e }}"
+                    data-Spec_date="{{ Doctor[8]|e }}"
+                    data-bio="{{ Doctor[9]|e }}">
+                    Edit
+                </button>
+                <a class="btn btn-outline-danger" href="{{ url_for('user_delete', user_id=Doctor[4]) }}">
+                  Delete
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h1 style="text-align: center; color: #1a7679;">Approval Queue</h1>
+      <p>Below shows the list of Doctor Profiles in queue waiting for approvaL</p>
+    </div>
+    <div class="table-responsive">  
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">User Id</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for Doctor in queueDoctors %}
+            <tr>
+              <th scope="row">{{Doctor[0]}}</th>
+              <td>{{Doctor[1]}} {{Doctor[2]}} {{Doctor[3]}}</td>
+              <td>{{Doctor[4]}}</td>
+              <td>
+                <a class="btn btn-outline-success" href="{{ url_for('user_approve', user_id=Doctor[4]) }}" >
+                  Approve
+                </a>
+                <a class="btn btn-outline-danger" href="{{ url_for('user_reject', user_id=Doctor[4]) }}">
+                  Reject
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <form id="modalEditForm" action="{{ url_for('doctors_update') }}" method="POST">
+                <div class="modal-header">
+                <h5 class="modal-title">Edit Doctor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                <input type="hidden" name="doctor_id" id="modal_doctor_id">
+                <input type="hidden" name="u_id" id="modal_u_id">
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input class="form-control" name="doctor_fname" id="doctor_fname">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Middle Name</label>
+                    <input class="form-control" name="doctor_mname" id="doctor_mname">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input class="form-control" name="doctor_lname" id="doctor_lname">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Department id</label>
+                    <input class="form-control" name="doctor_dept" id="doctor_dept">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Mobile No.</label>
+                    <input class="form-control" name="doctor_mobile" id="doctor_mobile">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Specialization</label>
+                    <input class="form-control" name="doctor_specialization" id="doctor_specialization">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Specialization date</label>
+                    <input type="date" class="form-control" name="doctor_specd" id="doctor_specd">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Doctor Bio</label>
+                    <input class="form-control" name="doctor_bio" id="doctor_bio">
+                </div>
+                </div>
+                <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+            </div>
+        </div>
+    
+    <script>
+        const editModal = document.getElementById('editModal');
+        editModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const doc_id = button.getAttribute('data-id');
+        const u_id = button.getAttribute('data-u-id');
+        const fname = button.getAttribute('data-fname');
+        const mname = button.getAttribute('data-mname');
+        const lname = button.getAttribute('data-lname');
+        const dept_id = button.getAttribute('data-deptid');
+        const mobile = button.getAttribute('data-mobile');
+        const specialization = button.getAttribute('data-specialization');
+        const Spec_date = button.getAttribute('data-Spec_date');
+        const bio = button.getAttribute('data-bio');
+0
+        document.getElementById('modal_doctor_id').value = doc_id;
+        document.getElementById('modal_u_id').value = u_id;
+        document.getElementById('doctor_fname').value = fname;
+        document.getElementById('doctor_mname').value = mname;
+        document.getElementById('doctor_lname').value = lname;
+        document.getElementById('doctor_dept').value = dept_id;
+        document.getElementById('doctor_mobile').value = mobile;
+        document.getElementById('doctor_specialization').value = specialization;
+        document.getElementById('doctor_specd').value = Spec_date;
+        document.getElementById('doctor_bio').value = bio;
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  </body>
+</html>

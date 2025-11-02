@@ -2,19 +2,19 @@
 from datetime import datetime, date, time
 from flask_login import UserMixin
 from sqlalchemy import CheckConstraint, UniqueConstraint
-from . import db
+from flask_sqlalchemy import SQLAlchemy
+db = SQLAlchemy()
 
 # ---------- Core auth/user ----------
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     phone = db.Column(db.String(20))                            # keep as string (can include +, 0s)
-    password_hash = db.Column(db.String(200), nullable=False)   # store hashed password
+    password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(20), nullable=False)             # 'admin' | 'doctor' | 'patient'
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     # convenience helpers (hash/verify implemented in auth code)
     def __repr__(self) -> str:
@@ -38,18 +38,21 @@ class Department(db.Model):
 class Doctor(db.Model):
     __tablename__ = "doctors"
     id = db.Column(db.Integer, primary_key=True)
-
+    First_name = db.Column(db.Text, nullable=False)
+    Middle_name = db.Column(db.Text)
+    Last_name = db.Column(db.Text)
     # profile/user
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
+    user_id = db.Column(db.Text, db.ForeignKey("users.email", ondelete="CASCADE"), nullable=False, unique=True)
     user = db.relationship("User", backref=db.backref("doctor", uselist=False, cascade="all,delete"))
-
+    
+    Mobile = db.Column(db.Integer, nullable=False)
     # professional info
     specialization = db.Column(db.String(120))
-    years_experience = db.Column(db.Integer)
+    Spec_date = db.Column(db.Date)
     bio = db.Column(db.Text)
 
     # department link
-    department_id = db.Column(db.Integer, db.ForeignKey("departments.id"), nullable=True)
+    department_id = db.Column(db.Integer, db.ForeignKey("departments.id",ondelete="CASCADE"), nullable=True)
     department = db.relationship("Department", back_populates="doctors")
 
     # relationships
@@ -69,7 +72,7 @@ class Patient(db.Model):
 
     dob = db.Column(db.Date)
     gender = db.Column(db.String(10))
-    address = db.Column(db.Text)
+    address = db.Column(db.String(200))
 
     appointments = db.relationship("Appointment", back_populates="patient", cascade="all,delete-orphan")
 
@@ -150,3 +153,23 @@ class PatientVisit(db.Model):
 
     def __repr__(self) -> str:
         return f"<Visit appt={self.appointment_id} {self.visit_date:%Y-%m-%d}>"
+class Que(db.Model):
+    __tablename__ = 'que'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    middle_name = db.Column(db.String(100))
+    surname = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)  # store hashed passwords
+    phone = db.Column(db.String(15))
+    specialty = db.Column(db.String(120))
+    specialisation = db.Column(db.String(150))
+    mbbs_date = db.Column(db.Date)
+    spec_date = db.Column(db.Date)
+    bio = db.Column(db.Text)
+    status = db.Column(db.String(50), nullable=False, default='pending')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Que id={self.id} name={self.first_name} {self.surname} email={self.email} status={self.status}>"

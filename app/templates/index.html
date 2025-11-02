@@ -11,7 +11,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a7679;">
         <div class="container-fluid">
             <a class="navbar-brand" href="./index.html">
-                <img src="./sources/logo.jpg" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
+                <img src="../static/logo.jpg" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -19,24 +19,24 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="./index.html">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./about.html">About</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./contact.html">Contact Us</a>
+                        <a class="nav-link" href="/contact">Contact Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./auth/login.html">Login</a>
+                        <a class="nav-link" href="/login">Login</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Sign Up
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Doctor</a></li>
-                            <li><a class="dropdown-item" href="#">Patient    </a></li>
+                            <li><a class="dropdown-item" href="/Doctor_Register">Doctor</a></li>
+                            <li><a class="dropdown-item" href="/patient_register">Patient    </a></li>
                         </ul>
                     </li>
                 </ul>
@@ -46,13 +46,13 @@
     <div id="carouselAutoplaying" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="./sources/1.jpg" class="d-block w-100" alt="...">
+                <img src="../static/1.jpg" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
-                <img src="./sources/2.jpg" class="d-block w-100" alt="...">
+                <img src="../static/2.jpg" class="d-block w-100" alt="...">
             </div>
             <div class="carousel-item">
-                <img src="./sources/3.jpg" class="d-block w-100" alt="...">
+                <img src="../static/3.jpg" class="d-block w-100" alt="...">
             </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselAutoplaying" data-bs-slide="prev">
@@ -67,7 +67,7 @@
     <h1 id = "heading">Why Choose Us?</h1>
     <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 20px;">
         <div class="card" style="width: 25rem; background: #1a7679;">
-            <img src="./sources/img1.jpg" class="card-img-top" alt="Appointment Booking card">
+            <img src="../static/img1.jpg" class="card-img-top" alt="Appointment Booking card">
             <div class="card-body1">
                 <p class="card-text1" style="color: white; padding: 5px;">
                     Say goodbye to long queues. With LifeLine HMS, book or reschedule appointments in seconds, while our system finds the earliest available slot to reduce wait time.
@@ -76,7 +76,7 @@
         </div>
 
         <div class="card" style="width: 25rem; background: #1a7679;">
-            <img src="./sources/img2.jpg" class="card-img-top" alt="Appointment Booking card">
+            <img src="../static/img2.jpg" class="card-img-top" alt="Appointment Booking card">
             <div class="card-body1">
                 <p class="card-text1" style="color: white; padding: 5px;">
                     View your doctor’s qualifications, specializations, and years of experience before you choose. Transparency builds trust, and we bring that directly to you.
@@ -85,7 +85,7 @@
         </div>
 
         <div class="card" style="width: 25rem; background: #1a7679;">
-            <img src="./sources/img3.jpg" class="card-img-top" alt="Appointment Booking card">
+            <img src="../static/img3.jpg" class="card-img-top" alt="Appointment Booking card">
             <div class="card-body1">
                 <p class="card-text1" style="color: white; padding: 5px;">
                     All your prescriptions, test results, and treatment history in one secure digital vault. Access anytime, anywhere — whether at home, on the go, or at another hospital.
@@ -93,19 +93,19 @@
             </div>
         </div>
     </div>
-    <h1 id = "heading1" >Register with us today</h1>
-    <div style="text-align: center;"><button type="button" class="btn btn-lg" style="color:white; background-color: #1a7679;" href="#">Register</button></div>
+    <h1 id = "heading1" style="text-align: center" >Register with us today</h1>
+    <div style="text-align: center;"><a role="button" class="btn btn-lg" style="color:white; background-color: #1a7679;" href="/patient_register">Register</a></div>
     
     
-    <h1 id = "heading2">Aldready registered</h1>
-    <div style="text-align: center;"><button type="button" class="btn btn-lg" style="color:white; background-color: #1a7679;" href="#">Login</button></div>
+    <h1 id = "heading2" style="text-align: center">Aldready registered</h1>
+    <div style="text-align: center"><a role="button" class="btn btn-lg" style="color:white; background-color: #1a7679;" href="/login">Login</a></div>
 
     <footer class="bg-light text-dark pt-5" aria-label="Site Footer">
         <div class="container">
             <div class="row gy-4">
             <!-- Brand & description -->
             <div class="col-12 col-md-4">
-                <a href="./index.html" class="d-inline-flex align-items-center mb-2 text-decoration-none">
+                <a href="/" class="d-inline-flex align-items-center mb-2 text-decoration-none">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <rect width="24" height="24" rx="6" fill="#10898d" />
                         <path d="M7 12c0-2.761 2.239-5 5-5v10c-2.761 0-5-2.239-5-5z" fill="white"/>
@@ -120,10 +120,10 @@
         <div class="col-6 col-md-2">
         <h6 class="text-uppercase fw-bold">Quick Links</h6>
         <ul class="list-unstyled small">
-        <li><a href="./index.html" class="text-decoration-none text-muted">Home</a></li>
-        <li><a href="./about.html" class="text-decoration-none text-muted">About Us</a></li>
-        <li><a href="./contact.html" class="text-decoration-none text-muted">Contact Us</a></li>
-        <li><a href="/appointments" class="text-decoration-none text-muted">Appointments</a></li>
+        <li><a href="/" class="text-decoration-none text-muted">Home</a></li>
+        <li><a href="/about" class="text-decoration-none text-muted">About Us</a></li>
+        <li><a href="/contact" class="text-decoration-none text-muted">Contact Us</a></li>
+        <li><a href="/patient_register" class="text-decoration-none text-muted">Appointments</a></li>
         </ul>
         </div>
 
@@ -132,7 +132,7 @@
         <div class="col-6 col-md-3">
         <h6 class="text-uppercase fw-bold">Patient Resources</h6>
         <ul class="list-unstyled small">
-        <li><a href="/records" class="text-decoration-none text-muted">Medical Records</a></li>
+        <li><a href="/patient_register" class="text-decoration-none text-muted">Medical Records</a></li>
         <li><a href="/faq" class="text-decoration-none text-muted">FAQs</a></li>
         <li><a href="/privacy" class="text-decoration-none text-muted">Privacy Policy</a></li>
         <li><a href="/terms" class="text-decoration-none text-muted">Terms &amp; Conditions</a></li>

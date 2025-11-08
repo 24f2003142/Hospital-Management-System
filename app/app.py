@@ -42,9 +42,125 @@ def authenticate(usernm, passwd):
     if role=="patient":    
         return redirect(url_for('patient'))
     elif role=="doctor":
-        return redirect(url_for('doctor'))
+        return redirect(url_for('doctor',user_name=usernm))
     elif role=="admin":
         return redirect(url_for('admin'))
+
+
+@app.route('/doctor/<user_name>')
+def doctor(user_name):
+    conn = sqlite3.connect('./instance/dev.db')
+    c = conn.cursor()
+    c.execute("SELECT id,First_name, Middle_name,Last_name, user_id, department_id FROM doctors WHERE user_id=?" , (user_name,))
+    Doctor = c.fetchone()
+    name=Doctor[1]+" "+Doctor[2]+" "+Doctor[3]
+    c.execute("SELECT a.id,a.reference_no, a.patient_id,p.First_Name, p.Middle_Name, p.Last_Name, a.doctor_id, a.slot_id, a.status FROM appointments a,patients p where a.patient_id=p.id and a.status='Booked'")
+    queueappointments = c.fetchall()
+    return render_template('doctor/Dashboard.html',name=name, allappointments=queueappointments, user_name=user_name)
+
+@app.route('/doctor/patient_visit/<user_name>', methods=['GET','POST'])
+def patient_history(user_name):
+    patient_id=request.form.get('patient_id')
+    conn = sqlite3.connect('./instance/dev.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM patient_visits pv,patients p WHERE pv.patient_id=p.id and patient_id=?" , (patient_id,))
+    patient_history_list = c.fetchall()
+    c.execute("SELECT * FROM doctors d, departments dp WHERE d.department_id=dp.id and d.user_id=?" , (user_name,))
+    doctor_info = c.fetchall()
+    return render_template('doctor/patient_visit.html',doctor_info=doctor_info, patient_info=patient_history_list, user_name=user_name)
+
+@app.route('/doctor/<user_name>/visit_update/<option>', methods=['GET','POST'])
+def doctor_patient_visit_update(user_name, option):
+    print("visit_update called, option =", option)
+
+    if option == 'Edit':
+        patient_id = request.form.get('patient_id')
+        appointment_id = request.form.get('appointment_id')
+        visit_type = request.form.get('input_visit_type')
+        tests_done = request.form.get('input_tests_done')
+        diagnosis = request.form.get('input_diagnosis')
+        notes = request.form.get('notes')
+        medicine_names = request.form.getlist('medicine_name[]')
+        dosages = request.form.getlist('dosage[]')
+
+        if not appointment_id or not patient_id:
+            flash("Missing appointment or patient id", "warning")
+            return redirect(url_for('doctor', user_name=user_name))
+
+        meds = []
+        for name, dose in zip(medicine_names, dosages):
+            if name:
+                n = name.strip()
+                d = (dose or '').strip()
+                if n:
+                    meds.append(f"{n} {d}".strip())
+        medicines_csv = ', '.join(meds)
+        visit_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        try:
+            conn = sqlite3.connect('./instance/dev.db')
+            conn.execute("PRAGMA foreign_keys = ON;")
+            c = conn.cursor()
+
+            c.execute("""
+                INSERT INTO patient_visits
+                    (appointment_id, patient_id, visit_date, visit_type, tests_done, diagnosis, notes, prescription)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (appointment_id, patient_id, visit_date, visit_type, tests_done, diagnosis, notes, medicines_csv))
+
+            conn.commit()
+            print("Saved patient visit for appointment:", appointment_id)
+        except Exception as e:
+            conn.rollback()
+            print("Error saving patient visit:", e)
+            flash("Failed to save visit. Check server logs.", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('doctor', user_name=user_name))
+
+    elif option in ('Completed', 'Cancelled'):
+        # read IDs from form (coming from the inline forms in Dashboard.html)
+        appointment_id = request.form.get('appointment_id')
+        patient_id = request.form.get('patient_id')
+
+        if not appointment_id or not patient_id:
+            flash("Missing appointment or patient id", "warning")
+            return redirect(url_for('doctor', user_name=user_name))
+
+        new_status = "Completed" if option == 'Completed' else "Cancelled"
+
+        try:
+            conn = sqlite3.connect('./instance/dev.db')
+            conn.execute("PRAGMA foreign_keys = ON;")
+            c = conn.cursor()
+
+            # Update appointments table where both id and patient_id match for safety
+            c.execute("UPDATE appointments SET status = ? WHERE patient_id = ?", (new_status, patient_id))
+            # If you want to also record who completed/cancelled and when, consider updating additional columns here.
+
+            # Optionally check if a row was actually updated
+            if c.rowcount == 0:
+                # nothing updated – maybe IDs mismatched
+                print("Warning: no appointment row updated (id/patient mismatch?)", appointment_id, patient_id)
+
+            conn.commit()
+            print(f"Marked appointment {appointment_id} as {new_status}")
+            flash(f"Appointment marked {new_status}.", "success")
+        except Exception as e:
+            conn.rollback()
+            print("Error updating appointment status:", e)
+            flash("Failed to update appointment. Check server logs.", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('doctor', user_name=user_name))
+
+    else:
+        flash("Invalid action", "warning")
+        return redirect(url_for('doctor', user_name=user_name))
+
+
 
 @app.route('/SignedIn/admin/Doctors')
 def admin():
@@ -79,6 +195,53 @@ def patients():
     conn.close()
     return render_template('SignedIn/patients.html', allPatients=allPatients,)
 
+@app.route('/SignedIn/admin/appointments')
+def appointments():
+    conn = sqlite3.connect('./instance/dev.db')
+    c = conn.cursor()
+    c.execute("SELECT id,First_name, Middle_name,Last_name, user_id, dob,gender,Mobile, address FROM patients")
+    allPatients = c.fetchall()
+    print(allPatients)
+    conn.close()
+    return render_template('SignedIn/appointments.html', allPatients=allPatients,)
+
+@app.route('/SignedIn/admin/patients/update', methods=['POST'])
+def patients_update():
+    id = request.form.get('patient_id')
+    fname = request.form.get('patient_fname')
+    mname = request.form.get('patient_mname')
+    lname = request.form.get('patient_lname')
+    u_id = request.form.get('u_id')
+    mobile = request.form.get('patient_mobile')
+    gender = request.form.get('patient_gender')
+    DOB = request.form.get('patient_dob')
+    
+    try:
+            dob = datetime.strptime(DOB, "%Y-%m-%d").date()
+    except ValueError:
+            dob = None
+    address = request.form.get('patient_address')
+    
+    name=fname+" "+mname+" "+lname
+    print(fname, mname, lname, dob, mobile, gender, address, u_id)
+    conn = sqlite3.connect('./instance/dev.db')
+    conn.execute("PRAGMA foreign_keys = ON;")
+    c = conn.cursor()
+    
+    c.execute("""
+      UPDATE patients
+      SET First_name = ?, Middle_name = ?, Last_name = ?, dob = ? , Mobile=?, gender=?, address=?
+      WHERE user_id = ?
+    """, (fname, mname, lname, dob, mobile, gender, address, u_id))
+    
+    c.execute("""
+      UPDATE users
+      SET name = ?, phone=? WHERE email=?
+    """, (name,mobile,u_id))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('patients'))
 
 @app.route('/SignedIn/admin/Departments/add', methods=['GET', 'POST'])
 def departments_add():

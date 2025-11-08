@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Doctor</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    </head>
+    <body style="background-color: #dae9ea;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a7679;">
+            <div class="container-fluid">
+                <a class="navbar-brand">
+                    <img src="../../static/logo.jpg" alt="Logo" width="120" height="50" class="d-inline-block align-text-top">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <h3 style="color: white;">Slot Availability</h3>
+                        </li>
+                    </ul>
+                
+                </div>                
+            </div>
+            <div class="d-inline-block align-text-top-left"><a class="btn btn-outline-light" class="d-inline-block align-text-top-left" href="{{ url_for('doctor', user_name=user_name) }}" > Back
+                </a></div>
+        </nav>
+
+        <div class="container-fluid">
+            <h4>Patient's Name: {{patient_info[0][11]}} {{patient_info[0][12]}} {{patient_info[0][13]}}</h4>
+            <h4>Doctors's Name: {{doctor_info[0][1]}} {{doctor_info[0][2]}} {{doctor_info[0][3]}}</h4>
+            <h4>Department's Name: {{doctor_info[0][11]}} </h4>
+            <p>This table shows appointments which were completed with their date and the prescriptions which were issued.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                    <th scope="col"> Date</th>
+                    <th scope="col">Slot 1</th>
+                    <th scope="col">Slot 2</th>
+                    <th scope="col">Slot 3</th>
+                    <th scope="col">slot 4</th>
+                    <th scope="col">slot 5</th>
+                    <th scope="col">Slot 6</th>
+                    <th scope="col">Slot 7</th>
+                    <th scope="col">Slot 8</th>
+                    <th scope="col">slot 9</th>
+                    <th scope="col">slot 10</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient_history in patient_info %}
+                    <tr>
+                        <th scope="row">{{patient_history[3]}}</th>
+                        <td>{{patient_history[4]}}</td>
+                        <td>{{patient_history[5]}}</td>
+                        <td>{{patient_history[6]}}</td>
+                        <td>{{patient_history[7]}}</td>
+                        <td>{{patient_history[8]}}</td>      
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    </body>
+</html>

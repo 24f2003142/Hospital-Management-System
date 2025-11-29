@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Lifeline HMS | Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <link rel="stylesheet" href="./style/style.css">
   </head>
   <body style="background-color:#dae9ea;">
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1a7679;">
@@ -18,142 +17,185 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" aria-current="page" href="/SignedIn/admin/Doctors">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SignedIn/admin/Departments">Departments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SignedIn/admin/patients">Patients</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/SignedIn/admin/appointments">Appointments</a></li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/SignedIn/admin/Doctors">Doctors</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/SignedIn/admin/Departments">Departments</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/SignedIn/admin/patients">Patients</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="/SignedIn/admin/appointments">Appointments</a>
+                        <a class="nav-link" href="/">Logout</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div>
-      <h1 style="text-align: center; color: #1a7679;">Appointments Table</h1>
-      <p> This is the appointments page of admin the below shows the list of currently added Patients which are scheduled with the hospital</p>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Appointment No.</th>
-            <th scope="col">Patient Name</th>
-            <th scope="col">Doctor Name</th>
-            <th scope="col">Department</th>
-            <th scope="col">Patient History</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for Patient in allPatients %}
-            <tr>
-              <th scope="row">{{Patient[0]}}</th>
-              <td>{{Patient[1]}} {{Patient[2]}} {{Patient[3]}}</td>
-              <td>{{Patient[4]}}</td>
-              <td>{{Patient[5]}}</td>
-              <td>
-                <button type="button" class="btn btn-outline-warning"
-                    data-bs-toggle="modal"
-                    data-bs-target="#editModal"
-                    data-id="{{ Patient[0] }}"
-                    data-u-id="{{ Patient[4] }}"
-                    data-fname="{{ Patient[1]|e }}"
-                    data-mname="{{ Patient[2]|e }}"
-                    data-lname="{{ Patient[3]|e }}"
-                    data-dob="{{ Patient[5]|e }}"
-                    data-gender="{{ Patient[6]|e }}"
-                    data-mobile="{{ Patient[7]|e }}"
-                    data-address="{{ Patient[8]|e }}"
-                    >
-                    Edit
-                </button>
-                <a class="btn btn-outline-danger" href="{{ url_for('user_delete', user_id=Patient[4]) }}">
-                  Delete
-                </a>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <form id="modalEditForm" action="{{ url_for('patients_update') }}" method="POST">
-                <div class="modal-header">
-                <h5 class="modal-title">Edit Doctor</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                <input type="hidden" name="patient_id" id="modal_patient_id">
-                <input type="hidden" name="u_id" id="modal_u_id">
-                <div class="mb-3">
-                    <label class="form-label">First Name</label>
-                    <input class="form-control" name="patient_fname" id="patient_fname">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Middle Name</label>
-                    <input class="form-control" name="patient_mname" id="patient_mname">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Last Name</label>
-                    <input class="form-control" name="patient_lname" id="patient_lname">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Date Of Birth</label>
-                    <input type="date" class="form-control" name="patient_dob" id="patient_dob">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Gender</label>
-                    <input class="form-control" name="patient_gender" id="patient_gender">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Mobile</label>
-                    <input class="form-control" name="patient_mobile" id="patient_mobile">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Address</label>
-                    <input class="form-control" name="patient_address" id="patient_address">
-                </div>
-                </div>
-                <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-            </div>
-        </div>
-    
-    <script>
-        const editModal = document.getElementById('editModal');
-        editModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // Button that triggered the modal
-        const doc_id = button.getAttribute('data-id');
-        const u_id = button.getAttribute('data-u-id');
-        const fname = button.getAttribute('data-fname');
-        const mname = button.getAttribute('data-mname');
-        const lname = button.getAttribute('data-lname');
-        const dob = button.getAttribute('data-dob');
-        const gender = button.getAttribute('data-gender');
-        const mobile = button.getAttribute('data-mobile');
-        const address = button.getAttribute('data-address');
 
-        document.getElementById('modal_patient_id').value = doc_id;
-        document.getElementById('modal_u_id').value = u_id;
-        document.getElementById('patient_fname').value = fname;
-        document.getElementById('patient_mname').value = mname;
-        document.getElementById('patient_lname').value = lname;
-        document.getElementById('patient_dob').value = dob;
-        document.getElementById('patient_gender').value = gender;
-        document.getElementById('patient_mobile').value = mobile;
-        document.getElementById('patient_address').value = address;
+    <div class="container-fluid">
+      <h1 class="text-center" style="color: #1a7679;">Appointments Table</h1>
+      <p>This is the appointments page of admin. Below shows the list of currently scheduled patients.</p>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Appointment No.</th>
+              <th scope="col">Reference No.</th>
+              <th scope="col">Patient Name</th>
+              <th scope="col">Doctor Name</th>
+              <th scope="col">Department</th>
+              <th scope="col">Patient History</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for appointment in allappointments %}
+              <tr>
+                <th scope="row">{{ appointment[0] }}</th>
+                <td>{{ appointment[1] }}</td>
+
+                {# patient name columns in your original: appointment[3], [4], [5] #}
+                <td>{{ appointment[3] }} {{ appointment[4] }} {{ appointment[5] }}</td>
+
+                {# doctor name originally used appointment[7],[8],[9] #}
+                <td>{{ appointment[7] }} {{ appointment[8] }} {{ appointment[9] }}</td>
+
+                {# department name at index 11 in your original #}
+                <td>{{ appointment[11] }}</td>
+
+                <td>
+                  {# Pass patient_id (index 2) into data attribute #}
+                  <button type="button" class="btn btn-outline-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#historyModal"
+                      data-appointment-id="{{ appointment[0] }}"
+                      data-patient-id="{{ appointment[2] }}">
+                    View History
+                  </button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal: Patient History -->
+    <div class="modal fade" id="historyModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Patient History</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="history-loading" class="text-center py-4">
+              <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+            </div>
+            <div id="history-empty" class="d-none alert alert-info">No history found for this patient.</div>
+
+            <!-- container where JS will inject history -->
+            <div id="history-content" class="d-none">
+              <!-- example: a list of visits -->
+              <div id="visits-list" class="list-group"></div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <!-- only Back button as requested -->
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const historyModal = document.getElementById('historyModal');
+
+        historyModal.addEventListener('show.bs.modal', async function (event) {
+          const button = event.relatedTarget;
+          const patientId = button.getAttribute('data-patient-id');
+          const appointmentId = button.getAttribute('data-appointment-id'); // if needed
+          const loadingEl = document.getElementById('history-loading');
+          const emptyEl = document.getElementById('history-empty');
+          const contentEl = document.getElementById('history-content');
+          const visitsList = document.getElementById('visits-list');
+
+          // reset UI
+          loadingEl.classList.remove('d-none');
+          emptyEl.classList.add('d-none');
+          contentEl.classList.add('d-none');
+          visitsList.innerHTML = '';
+
+          if (!patientId) {
+            loadingEl.classList.add('d-none');
+            emptyEl.textContent = 'Patient id not found.';
+            emptyEl.classList.remove('d-none');
+            return;
+          }
+
+          try {
+            // fetch patient history from server endpoint (GET). Adjust URL if you choose a different route.
+            const resp = await fetch(`/SignedIn/admin/patient_history?patient_id=${encodeURIComponent(patientId)}`, {
+              method: 'GET',
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (!resp.ok) {
+              throw new Error('Network response was not ok');
+            }
+
+            const data = await resp.json(); // expected: array of visit objects
+            loadingEl.classList.add('d-none');
+
+            if (!Array.isArray(data) || data.length === 0) {
+              emptyEl.classList.remove('d-none');
+              return;
+            }
+
+            // show history content
+            contentEl.classList.remove('d-none');
+
+            // build list entries
+            data.forEach(function (visit) {
+              // visit expected fields: visit_date, visit_type, tests_done, diagnosis, notes, prescription, reference_no
+              const item = document.createElement('div');
+              item.className = 'list-group-item';
+
+              const title = document.createElement('div');
+              title.className = 'd-flex w-100 justify-content-between';
+              title.innerHTML = `<h6 class="mb-1">Visit: ${visit.visit_date || 'Unknown date'}</h6><small>${visit.visit_type||''}</small>`;
+
+              const body = document.createElement('div');
+              const ref = visit.reference_no ? `<div><strong>Appointment Ref:</strong> ${visit.reference_no}</div>` : '';
+              const tests = visit.tests_done ? `<div><strong>Tests:</strong> ${visit.tests_done}</div>` : '';
+              const diag = visit.diagnosis ? `<div><strong>Diagnosis:</strong> ${visit.diagnosis}</div>` : '';
+              const notes = visit.notes ? `<div><strong>Notes:</strong> ${visit.notes}</div>` : '';
+              const pres = visit.prescription ? `<div><strong>Prescription:</strong> ${visit.prescription}</div>` : '';
+
+              body.innerHTML = ref + tests + diag + notes + pres;
+
+              item.appendChild(title);
+              item.appendChild(body);
+              visitsList.appendChild(item);
+            });
+
+          } catch (err) {
+            loadingEl.classList.add('d-none');
+            emptyEl.textContent = 'Failed to load history. Check server logs.';
+            emptyEl.classList.remove('d-none');
+            console.error('Error fetching patient history:', err);
+          }
         });
+
+        // clear modal contents when hidden to avoid stale data
+        historyModal.addEventListener('hidden.bs.modal', function () {
+          document.getElementById('visits-list').innerHTML = '';
+          document.getElementById('history-loading').classList.remove('d-none');
+          document.getElementById('history-content').classList.add('d-none');
+          document.getElementById('history-empty').classList.add('d-none');
+        });
+      })();
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   </body>
 </html>

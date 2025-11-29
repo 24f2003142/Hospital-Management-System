@@ -30,6 +30,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/SignedIn/admin/appointments">Appointments</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -89,7 +92,7 @@
                     data-overview="{{ Department[2]|e }}">
                     Edit
                 </button>
-                <a class="btn btn-outline-danger" href="{{ url_for('departments_delete', dept_name=Department[1]) }}" >
+                <a class="btn btn-outline-danger" href="{{ url_for('departments_delete', dept_id=Department[0]) }}" >
                   Delete
                 </a>
               </td>

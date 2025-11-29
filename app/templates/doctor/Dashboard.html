@@ -23,20 +23,26 @@
             </ul>
         </div>
         <div class="d-inline-block align-text-top-left">
-            <div class="collapse navbar-collapse" id="navbarProfile">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            Profile
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Update Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Change Password</a></li>
-                            <li><a class="dropdown-item" href="/">logout</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+          <div>
+              <ul class="navbar-nav">
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" role="button" 
+                        data-bs-toggle="dropdown">
+                          Profile
+                      </a>
+                      <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" href="#" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#doctorChangePasswordModal">
+                                Change Password
+                          </a></li>
+                          <li><a class="dropdown-item" href="/">logout</a></li>
+                      </ul>
+                  </li>
+              </ul>
+          </div>
+        </div>
+
         </div>
         <a class="navbar-brand">
             <img src="../../static/user.png" alt="Avatar" width="50" height="50" class="d-inline-block align-text-top">
@@ -128,10 +134,11 @@
 
   <div class="text-center my-5">
     <h1 style="color:#1a7679">Provide Slot Availability</h1>
-    <p>This section allows doctor to update slot availability</p>
-    <button type="button" class="btn btn-outline-success">Provide Availability</button>
+    <p>This section allows the doctor to update slot availability for upcoming days.</p>
+    <a href="{{ url_for('doctor_slot_filling', user_name=user_name) }}" class="btn btn-success btn-lg">
+      Provide Availability
+    </a>
   </div>
-</div>
 
 
 <!-- SINGLE form modal: replace existing editModal block -->
@@ -258,9 +265,65 @@
   </tr>
 </template>
 
+<!-- ===== Doctor Change Password Modal ===== -->
+<div class="modal fade" id="doctorChangePasswordModal" tabindex="-1" aria-labelledby="doctorChangePasswordLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('doctor_change_password', user_name=user_name) }}">
+        <div class="modal-header">
+          <h5 class="modal-title" id="doctorChangePasswordLabel">Change Password</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Current Password</label>
+            <input name="current_password" type="password" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">New Password</label>
+            <input name="new_password" id="doctor_new_password" type="password" class="form-control" minlength="6" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <input name="confirm_password" id="doctor_confirm_password" type="password" class="form-control" minlength="6" required>
+          </div>
+
+          <small class="text-muted">Password must be at least 6 characters.</small>
+          <div id="doctor_pwd_mismatch" class="text-danger mt-2" style="display:none;">New password and confirmation do not match.</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button id="doctorChangePwdBtn" type="submit" class="btn btn-primary">Change Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
 <script>
+  // quick client-side check to avoid submitting if new != confirm
+  (function () {
+    const form = document.querySelector('#doctorChangePasswordModal form');
+    const newPwd = document.getElementById('doctor_new_password');
+    const confirmPwd = document.getElementById('doctor_confirm_password');
+    const msg = document.getElementById('doctor_pwd_mismatch');
+
+    form.addEventListener('submit', function (e) {
+      if (newPwd.value !== confirmPwd.value) {
+        e.preventDefault();
+        msg.style.display = 'block';
+      } else {
+        msg.style.display = 'none';
+      }
+    });
+  })();
+
   (function () {
     const editModalEl = document.getElementById('editModal');
     const modalPatientId = document.getElementById('modal_patient_id');
@@ -318,17 +381,12 @@
 
     // Optional: ensure there is always at least one row on hide (not necessary)
     editModalEl.addEventListener('hidden.bs.modal', function () {
-      // cleanup if needed
+  
     });
 
     // Optional client-side validation on submit: ensure there's at least one medicine row
     document.getElementById('modalEditForm').addEventListener('submit', function (e) {
-      // If you want to enforce at least one medicine, uncomment below:
-      // if (medicinesTableBody.querySelectorAll('tr').length === 0) {
-      //   e.preventDefault();
-      //   alert('Please add at least one medicine or close the modal.');
-      // }
-      // else allow submit; backend receives arrays medicine_name[] and dosage[] along with patient_id and appointment_id
+
     });
 
   })();

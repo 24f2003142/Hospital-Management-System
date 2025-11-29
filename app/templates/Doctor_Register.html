@@ -74,15 +74,26 @@
             <div class="col-4">
                 <label for="inputSpeciality" class="form-label">Speciality</label>
                 <select id="inputSpeciality" name="inputSpeciality" class="form-select" required>
-                    <option selected></option>
+                    <option value="" selected disabled>-- Select Speciality --</option>
                     <option>MD</option>
                     <option>MS</option>
                 </select>
             </div>
             <div class="col-4">
-                <label for="inputSpecialisation" class="form-label">Specialisation</label>
-                <input type="text" class="form-control" id="inputSpecialisation" name="inputSpecialisation" placeholder="Enter specialisation Eg. Medical Oncology" required>
+                <label for="inputSpecialisation" class="form-label">Specialisation (choose department)</label>
+                <select id="inputSpecialisation" name="inputSpecialisation" class="form-select" required>
+                    <option value="" selected disabled>-- Select department --</option>
+                    {% if alldepartments %}
+                    {% for dept in alldepartments %}
+                        {# dept is (id, name) because we SELECT id, name in backend #}
+                        <option value="{{ dept[1] }}">{{ dept[1] }}</option>
+                    {% endfor %}
+                    {% else %}
+                    <option value="General Medicine">No department added</option>
+                    {% endif %}
+                </select>
             </div>
+
             <div class="col-md-6">
                 <label for="inputyearsofexp-eriance" class="form-label">Date of Qualification from MBBS</label>
                 <input type="date" class="form-control" id="inputMBBSdate" name="inputMBBSdate" required>

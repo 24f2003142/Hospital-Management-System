@@ -30,6 +30,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/SignedIn/admin/appointments">Appointments</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -50,21 +53,21 @@
           </tr>
         </thead>
         <tbody>
-          {% for Patient in allPatients %}
+          {% for Patient in allpatients %}
             <tr>
               <th scope="row">{{Patient[0]}}</th>
-              <td>{{Patient[1]}} {{Patient[2]}} {{Patient[3]}}</td>
-              <td>{{Patient[4]}}</td>
+              <td>{{Patient[2]}} {{Patient[3]}} {{Patient[4]}}</td>
+              <td>{{Patient[1]}}</td>
               <td>{{Patient[5]}}</td>
               <td>
                 <button type="button" class="btn btn-outline-warning"
                     data-bs-toggle="modal"
                     data-bs-target="#editModal"
                     data-id="{{ Patient[0] }}"
-                    data-u-id="{{ Patient[4] }}"
-                    data-fname="{{ Patient[1]|e }}"
-                    data-mname="{{ Patient[2]|e }}"
-                    data-lname="{{ Patient[3]|e }}"
+                    data-u-id="{{ Patient[1] }}"
+                    data-fname="{{ Patient[2]|e }}"
+                    data-mname="{{ Patient[3]|e }}"
+                    data-lname="{{ Patient[4]|e }}"
                     data-dob="{{ Patient[5]|e }}"
                     data-gender="{{ Patient[6]|e }}"
                     data-mobile="{{ Patient[7]|e }}"
@@ -72,7 +75,7 @@
                     >
                     Edit
                 </button>
-                <a class="btn btn-outline-danger" href="{{ url_for('user_delete', user_id=Patient[4]) }}">
+                <a class="btn btn-outline-danger" href="{{ url_for('user_delete', user_id=Patient[1]) }}">
                   Delete
                 </a>
               </td>

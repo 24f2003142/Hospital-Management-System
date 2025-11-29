@@ -32,10 +32,10 @@ class Doctor(db.Model):
     Middle_name = db.Column(db.Text)
     Last_name = db.Column(db.Text)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
+    user_id = db.Column(db.Text, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     user = db.relationship("User", backref=db.backref("doctor", uselist=False, cascade="all,delete"))
 
-    Mobile = db.Column(db.String(20))
+    Mobile = db.Column(db.Integer, nullable=False)
     specialization = db.Column(db.String(120))
     Spec_date = db.Column(db.Date)
     bio = db.Column(db.Text)
@@ -51,15 +51,15 @@ class Patient(db.Model):
     __tablename__ = "patients"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
+    user_id = db.Column(db.Text, db.ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
 
     First_name = db.Column(db.Text, nullable=False)
     Middle_name = db.Column(db.Text)
-    Last_name = db.Column(db.Text, nullable=False)
+    Last_name = db.Column(db.Text)
 
-    dob = db.Column(db.Date)
-    gender = db.Column(db.Text)
-    Mobile = db.Column(db.String(20))
+    dob = db.Column(db.Date, nullable=False)
+    gender = db.Column(db.Text, nullable=False)
+    Mobile = db.Column(db.String(20), nullable=False)
     address = db.Column(db.Text)
 
     user = db.relationship("User", backref=db.backref("patient", uselist=False, cascade="all,delete"))
@@ -78,7 +78,7 @@ class DoctorAvailability(db.Model):
     slot_start = db.Column(db.Integer, nullable=False)
     slot_end = db.Column(db.Integer, nullable=False)
 
-    status = db.Column(db.String(20), default='closed', nullable=False)
+    status = db.Column(db.Text, default='closed', nullable=False)
     booking_count = db.Column(db.Integer, default=0, nullable=False)
 
     __table_args__ = (
@@ -96,7 +96,7 @@ class Appointment(db.Model):
     doctor_id = db.Column(db.Integer, db.ForeignKey("doctors.id", ondelete="CASCADE"), nullable=False)
     department_id = db.Column(db.Integer, db.ForeignKey("departments.id"))
 
-    slot_id = db.Column(db.Integer, db.ForeignKey("doctor_availabilities.id", ondelete="RESTRICT"), nullable=False, unique=True)
+    slot_id = db.Column(db.Integer, nullable=False, unique=True)
 
     status = db.Column(db.String(20), default="booked", nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -113,7 +113,7 @@ class PatientVisit(db.Model):
     __tablename__ = "patient_visits"
     id = db.Column(db.Integer, primary_key=True)
 
-    appointment_id = db.Column(db.Integer, db.ForeignKey("appointments.id", ondelete="CASCADE"), nullable=False, unique=True)
+    appointment_id = db.Column(db.Integer, db.ForeignKey("appointments.id", ondelete="CASCADE"), nullable=False)
     appointment = db.relationship("Appointment", back_populates="visit")
 
     visit_date = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
@@ -132,9 +132,9 @@ class Que(db.Model):
     surname = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    phone = db.Column(db.String(20))
-    specialty = db.Column(db.String(120))
-    specialisation = db.Column(db.String(150))
+    phone = db.Column(db.Text)
+    specialty = db.Column(db.Text)
+    specialisation = db.Column(db.Text)
     mbbs_date = db.Column(db.Date)
     spec_date = db.Column(db.Date)
     bio = db.Column(db.Text)

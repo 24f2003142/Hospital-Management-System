@@ -93,13 +93,11 @@
 
             <!-- container where JS will inject history -->
             <div id="history-content" class="d-none">
-              <!-- example: a list of visits -->
               <div id="visits-list" class="list-group"></div>
             </div>
           </div>
 
           <div class="modal-footer">
-            <!-- only Back button as requested -->
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
           </div>
         </div>
@@ -113,7 +111,7 @@
         historyModal.addEventListener('show.bs.modal', async function (event) {
           const button = event.relatedTarget;
           const patientId = button.getAttribute('data-patient-id');
-          const appointmentId = button.getAttribute('data-appointment-id'); // if needed
+          const appointmentId = button.getAttribute('data-appointment-id');
           const loadingEl = document.getElementById('history-loading');
           const emptyEl = document.getElementById('history-empty');
           const contentEl = document.getElementById('history-content');
@@ -133,7 +131,7 @@
           }
 
           try {
-            // fetch patient history from server endpoint (GET). Adjust URL if you choose a different route.
+            // fetch patient history from server endpoint (GET)
             const resp = await fetch(`/SignedIn/admin/patient_history?patient_id=${encodeURIComponent(patientId)}`, {
               method: 'GET',
               headers: { 'Accept': 'application/json' }

@@ -141,7 +141,7 @@
   </div>
 
 
-<!-- SINGLE form modal: replace existing editModal block -->
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -155,7 +155,7 @@
         </div>
 
         <div class="modal-body">
-          <!-- hidden ids populated from the Edit button -->
+          
           <input type="hidden" name="patient_id" id="modal_patient_id">
           <input type="hidden" name="appointment_id" id="modal_appointment_id">
 
@@ -185,7 +185,7 @@
             </div>
           </div>
 
-          <!-- Medicines section: dynamic rows -->
+          
           <div class="mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h6 class="mb-0">Medicines</h6>
@@ -204,7 +204,7 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <!-- JS will insert at least one row on modal show -->
+                  
                 </tbody>
               </table>
             </div>
@@ -217,11 +217,11 @@
         </div>
 
         <div class="modal-footer">
-          <!-- submit button INSIDE the form -->
+          
           <button type="submit" class="btn btn-primary">Save changes</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-      </form> <!-- end single form -->
+      </form> 
     </div>
   </div>
 </div>
@@ -229,7 +229,7 @@
 <div class="modal fade" id="displayModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <!-- SINGLE form for the modal -->
+      
       <form id="modalEditForm"
             action="{{ url_for('doctor_patient_visit_update', user_name=user_name, option='Edit') }}"
             method="POST">
@@ -241,16 +241,16 @@
         <div class="modal-body">
 
         <div class="modal-footer">
-          <!-- submit button INSIDE the form -->
+          
           <button type="submit" class="btn btn-primary">Save changes</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-      </form> <!-- end single form -->
+      </form> 
     </div>
   </div>
 </div>
 
-<!-- medicine row template (hidden) -->
+
 <template id="medicineRowTemplate">
   <tr class="medicine-row">
     <td>
@@ -265,7 +265,7 @@
   </tr>
 </template>
 
-<!-- ===== Doctor Change Password Modal ===== -->
+
 <div class="modal fade" id="doctorChangePasswordModal" tabindex="-1" aria-labelledby="doctorChangePasswordLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -379,12 +379,12 @@
       addMedicineRow();
     });
 
-    // Optional: ensure there is always at least one row on hide (not necessary)
+    // ensure there is always at least one row on hide
     editModalEl.addEventListener('hidden.bs.modal', function () {
   
     });
 
-    // Optional client-side validation on submit: ensure there's at least one medicine row
+    // client-side validation on submit: ensure there's at least one medicine row
     document.getElementById('modalEditForm').addEventListener('submit', function (e) {
 
     });
